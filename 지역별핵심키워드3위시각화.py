@@ -18,6 +18,7 @@ base_stop_words = {'노인', '참석', '일동', '주민',
 region_mask = df["통합 분류1"].notna() & df["통합 분류1"].str.contains("지역")
 df_region = df[region_mask].copy() 
 
+# 상세지역컬럼을 만들고 값 넣어주기
 df_region['상세지역'] = df_region['통합 분류1'].apply(
     lambda x: x.split('-')[-1].strip() if '-' in str(x) else x.strip()
 )
@@ -25,10 +26,10 @@ df_region['상세지역'] = df_region['통합 분류1'].apply(
 df_region['키워드'] = df_region['키워드'].fillna('')
 # 빈문자열이라도 삽입
 all_region_names = list(df_region['상세지역'].dropna().unique())
-
+# 지역리스트만들기 중복x
 
 def get_top_10_keywords(series):   
-    all_text = " ".join(series.astype(str))    
+    all_text = " ".join(series.astype(str))  # 하나의 문자열로
     words = [word.strip() for word in all_text.replace(',', ' ').split() if word.strip()]
     top_10 = [item[0] for item in Counter(words).most_common(5)]
     return top_10
